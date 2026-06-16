@@ -55,7 +55,7 @@ The model returns to its assembled state, hiding the internal components and pre
 
 Explore the internal electronic and electrical components of the power drive controller in an interactive 3D environment.
 
-🔗 **Live Demo:** [Add Demo URL]
+🔗 **Live Demo:** https://arjexm.web.app/#threeviewer&&controller
 
 ---
 
