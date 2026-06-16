@@ -82,20 +82,32 @@ The framework is designed to provide detailed visualization of internal componen
 ```bash
 git clone https://github.com/your-username/3d-product-explorer.git
 cd 3d-product-explorer
-npm install
 ```
 
 ### Run Locally
 
-```bash
-npm run dev
-```
+This project runs directly from the included HTML file and does not require a build process.
 
-Open your browser:
+#### Prerequisites
+
+* Visual Studio Code
+* Live Server extension for VS Code
+
+#### Launch the Application
+
+1. Open the project folder in **Visual Studio Code**.
+2. Install the **Live Server** extension if it is not already installed.
+3. Locate `explore.html` in the project root.
+4. Right-click `explore.html`.
+5. Select **Open with Live Server**.
+
+Your browser will automatically open the application at an address similar to:
 
 ```text
-http://localhost:3000
+http://127.0.0.1:5500/explore.html
 ```
+
+> Note: Running through Live Server is recommended because modern browsers restrict loading local assets directly from the file system.
 
 ---
 
@@ -114,7 +126,7 @@ To build your own interactive product explorer:
 ## Technology Stack
 
 * Three.js
-* JavaScript / TypeScript
+* JavaScript
 * WebGL
 * GLTF / GLB Assets
 
